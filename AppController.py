@@ -1,3 +1,5 @@
+# Database
+from database.Conection import Conection
 
 # Models
 from models.Categoria import Categoria
@@ -11,16 +13,25 @@ from models.Usuario import Usuario
 
 # Views
 
+""" 
+    categoria = Categoria()
+    ciudad = Ciudad()
+    compra = Compra()
+    marca = Marca()
+    pais = Pais()
+    producto = Producto()
+    provincia = Provincia()
+    usuario = Usuario() 
+"""
+
 class AppController:
 
+    def __init__(self):
+        self.__conection = Conection().get_conection()
+
     def iniciar(self):
-        categoria = Categoria()
-        ciudad = Ciudad()
-        compra = Compra()
-        marca = Marca()
-        pais = Pais()
-        producto = Producto()
-        provincia = Provincia()
-        usuario = Usuario()
-        
-        print("Metodo iniciar de AppController")
+        db = self.__conection.cursor()
+
+        db.execute("SHOW TABLES")
+        for database in db:
+            print(database)
