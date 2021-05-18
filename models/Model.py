@@ -1,14 +1,16 @@
 
+from abc import ABC, abstractmethod
+
 class Model(ABC):
     
     @abstractmethod
-    def create():
+    def create(self):
         pass
 
     @abstractmethod
-    def update():
+    def update(self):
         pass
 
     @abstractmethod
-    def delete():
+    def delete(self):
         pass

@@ -1,8 +1,4 @@
-from abc import ABC, abstractmethod
-from models.Model import Model
-from AppController import *
-
+from AppController import AppController
 
 app = AppController()
-
 app.iniciar()
