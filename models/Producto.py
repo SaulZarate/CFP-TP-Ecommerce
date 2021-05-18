@@ -1,3 +1,4 @@
+from database.Conection import Conection
 from models.Model import Model
 
 class Producto(Model):
@@ -9,6 +10,7 @@ class Producto(Model):
         self.__descripcion = ''
         self.__categoria_id = ''
         self.__marca_id = ''
+        self.__conection = Conection().get_conection()
 
     def find(self, id):
         pass

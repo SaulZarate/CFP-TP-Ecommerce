@@ -1,3 +1,4 @@
+from database.Conection import Conection
 from models.Model import Model
 
 class Compra(Model):
@@ -5,6 +6,7 @@ class Compra(Model):
     def __init__(self):
         self.__id = ''
         self.__precioTotal = ''
+        self.__conection = Conection().get_conection()
     
     def getAllForUsuarioId(self, usuario_id):
         pass

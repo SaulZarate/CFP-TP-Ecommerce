@@ -1,5 +1,7 @@
+""" 
 # Database
 from database.Conection import Conection
+"""
 
 # Models
 from models.Categoria import Categoria
@@ -27,11 +29,8 @@ from models.Usuario import Usuario
 class AppController:
 
     def __init__(self):
-        self.__conection = Conection().get_conection()
+        self.__producto = Producto()
+        self.__producto.prueba_conection()
 
     def iniciar(self):
-        db = self.__conection.cursor()
-
-        db.execute("SHOW TABLES")
-        for database in db:
-            print(database)
+        pass

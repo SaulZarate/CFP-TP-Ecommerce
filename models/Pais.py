@@ -1,3 +1,4 @@
+from database.Conection import Conection
 from models.Model import Model
 
 class Pais(Model):
@@ -5,6 +6,7 @@ class Pais(Model):
     def __init__(self):
         self.__id = ''
         self.__nombre = ''
+        self.__conection = Conection().get_conection()
 
     def find(self, id):
         pass

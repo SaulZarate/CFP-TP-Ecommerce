@@ -1,4 +1,4 @@
-
+from database.Conection import Conection
 from models.Model import Model
 
 class Usuario(Model):
@@ -11,6 +11,7 @@ class Usuario(Model):
         self.__clave = ''
         self.__isAdmin = ''
         self.__ciudad_id = ''
+        self.__conection = Conection().get_conection()
 
     def find(id):
         pass

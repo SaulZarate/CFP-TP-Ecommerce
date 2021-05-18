@@ -1,3 +1,4 @@
+from database.Conection import Conection
 from models.Model import Model
 
 class Provincia(Model):
@@ -6,6 +7,7 @@ class Provincia(Model):
         self.__id = ''
         self.__nombre = ''
         self.__pais_id = ''
+        self.__conection = Conection().get_conection()
 
     def find(self, id):
         pass
