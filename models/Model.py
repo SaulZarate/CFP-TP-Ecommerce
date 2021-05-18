@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class Model(ABC):
     
     @abstractmethod
-    def create(self):
+    def save(self):
         pass
 
     @abstractmethod

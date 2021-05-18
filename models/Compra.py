@@ -17,7 +17,7 @@ class Compra(Model):
     def get_all(self):
         pass
 
-    def create(self):
+    def save(self):
         print('Metodo create de la clase Compra')
 
     def update(self):

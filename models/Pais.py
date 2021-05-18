@@ -11,7 +11,7 @@ class Pais(Model):
     def find(self, id):
         pass
 
-    def create(self):
+    def save(self):
         print('Metodo create de la clase Pais')
 
     def update(self):

@@ -16,7 +16,7 @@ class Usuario(Model):
     def find(id):
         pass
 
-    def create(self):
+    def save(self):
         print('Metodo create de Usuario')
 
     def update(self):

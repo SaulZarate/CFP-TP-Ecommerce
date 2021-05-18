@@ -12,7 +12,7 @@ class Provincia(Model):
     def find(self, id):
         pass
 
-    def create(self):
+    def save(self):
         print('Metodo create de la clase Provincia')
 
     def update(self):

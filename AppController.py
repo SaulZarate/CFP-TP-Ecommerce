@@ -14,7 +14,19 @@ from models.Usuario import Usuario
 class AppController:
 
     def __init__(self):
-        self.__producto = Producto()
+        """ categoria = Categoria()
+        categoria.set_nombre('Remera')
+        categoria.save() """
+        """ marca = Marca()
+        marca.set_nombre('Rever Pass')
+        marca.save() """
+        """ producto = Producto()
+        producto.set_nombre('Remera')
+        producto.set_precio(700)
+        producto.set_descripcion('remera manga larga negra rallada')
+        producto.set_categoria_id(1)
+        producto.set_marca_id(1)
+        producto.save()  """
 
     def iniciar(self):
         pass

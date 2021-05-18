@@ -58,6 +58,8 @@ CREATE TABLE compras(
     FOREIGN KEY (producto_id) REFERENCES productos(id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
+-- Agregar columna a tabla Productos
+ALTER TABLE `productos` ADD `descripcion` TEXT NOT NULL AFTER `precio`;
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* ~~~~~~~~~~~~ INSERTS ~~~~~~~~~~~~ */

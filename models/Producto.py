@@ -4,12 +4,12 @@ from models.Model import Model
 class Producto(Model):
     
     def __init__(self):
-        self.__id = ''
-        self.__nombre = ''
-        self.__precio = ''
-        self.__descripcion = ''
-        self.__categoria_id = ''
-        self.__marca_id = ''
+        self.__id = None
+        self.__nombre = None
+        self.__precio = None
+        self.__descripcion = None
+        self.__categoria_id = None
+        self.__marca_id = None
         self.__conection = Conection().get_conection()
 
     def find(self, id):
@@ -18,14 +18,25 @@ class Producto(Model):
     def get_all(self):
         pass
 
-    def create(self):
-        print('Metodo create de la clase producto')
+    def save(self):
+        query = "insert into productos (id, nombre, precio, descripcion, categoria_id, marca_id) values (%s,%s,%s,%s,%s,%s)"
+        value = (None, self.get_nombre(), self.get_precio(), self.get_descripcion(), self.get_categoria_id(), self.get_marca_id())
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     def update(self):
-        print('Metodo update de la clase producto')
+        pass
 
     def delete(self):
-        print('Metodo delete de la clase producto')
+        query = 'DELETE FROM productos WHERE id=%s'
+        value = (self.get_id(), )
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el delete
+        self.__conection.commit()
+
 
     """ 
         GETTERS Y SETTERS

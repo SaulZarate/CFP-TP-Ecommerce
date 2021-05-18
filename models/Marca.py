@@ -11,8 +11,16 @@ class Marca(Model):
     def find(self, id):
         pass
 
-    def create(self):
-        print('Metodo create de la clase Marca')
+    def save(self):
+        query = "insert into marcas(id, nombre) values (%s,%s)"
+        value = (None,self.get_nombre())
+        
+        # Obtengo el cursor
+        cursor = self.__conection.cursor()
+        # Ejecuto la query
+        cursor.execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     def update(self):
         print('Metodo update de la clase Marca')
