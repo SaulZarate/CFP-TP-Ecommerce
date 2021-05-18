@@ -6,6 +6,7 @@ class Producto(Model):
         self.__id = ''
         self.__nombre = ''
         self.__precio = ''
+        self.__descripcion = ''
         self.__categoria_id = ''
         self.__marca_id = ''
 
@@ -33,6 +34,8 @@ class Producto(Model):
         return self.__nombre
     def get_precio(self):
         return self.__precio
+    def get_descripcion(self):
+        return self.__descripcion
     def get_categoria_id(self):
         return self.__categoria_id
     def get_marca_id(self):
@@ -44,6 +47,8 @@ class Producto(Model):
         self.__nombre = nombre
     def set_precio(self, precio):
         self.__precio = precio
+    def set_descripcion(self, descripcion):
+        self.__descripcion = descripcion
     def set_categoria_id(self, categoria_id):
         self.__categoria_id = categoria_id
     def set_marca_id(self, marca_id):
