@@ -14,11 +14,8 @@ class Marca(Model):
     def save(self):
         query = "insert into marcas(id, nombre) values (%s,%s)"
         value = (None,self.get_nombre())
-        
-        # Obtengo el cursor
-        cursor = self.__conection.cursor()
         # Ejecuto la query
-        cursor.execute(query, value)
+        self.__conection.cursor().execute(query, value)
         # Confirmo el insert
         self.__conection.commit()
 
@@ -26,7 +23,12 @@ class Marca(Model):
         print('Metodo update de la clase Marca')
 
     def delete(self):
-        print('Metodo delete de la clase Marca')
+        query = "DELETE FROM marcas WHERE id =(%s)"
+        value = (self.get_id(), )
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     """ 
         GETTERS Y SETTERS

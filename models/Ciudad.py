@@ -13,13 +13,23 @@ class Ciudad(Model):
         pass
 
     def save(self):
-        print('Metodo create de la clase Ciudad')
+        query = "insert into ciudades(id, nombre, provincia_id) values (%s,%s,%s)"
+        value = (None,self.get_nombre(), self.get_provincia_id())
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     def update(self):
-        print('Metodo update de la clase Ciudad')
+        pass
 
     def delete(self):
-        print('Metodo delete de la clase Ciudad')
+        sql = 'DELETE FROM ciudades WHERE id = %s '
+        value = (self.get_id(), )
+        # Ejecuto la query
+        self.__conection.cursor().execute(sql, value)
+        # Confirmo el delete
+        self.__conection.commit()
 
     """ 
         GETTERS Y SETTERS   

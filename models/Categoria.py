@@ -14,25 +14,21 @@ class Categoria(Model):
     def save(self):
         query = "insert into categorias(id, nombre) values (%s,%s)"
         value = (None,self.get_nombre())
-        # Obtengo el cursor
-        mycursor = self.__conection.cursor()
         # Ejecuto la query
-        mycursor.execute(query, value)
+        self.__conection.cursor().execute(query, value)
         # Confirmo el insert
         self.__conection.commit()
 
     def update(self):
-        print('Metodo update de la clase Categoria')
+        pass
 
     def delete(self):
-        """ sql = 'DELETE FROM categorias WHERE id = %s '
-        value = (self.get_id())
-        # Obtengo el cursor
-        mycursor = self.__conection.cursor()
+        sql = 'DELETE FROM categorias WHERE id = %s '
+        value = (self.get_id(), )
         # Ejecuto la query
-        mycursor.execute(sql, value)
+        self.__conection.cursor().execute(sql, value)
         # Confirmo el delete
-        self.__conection.commit() """
+        self.__conection.commit()
 
     """ 
         GETTERS Y SETTERS

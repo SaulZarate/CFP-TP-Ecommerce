@@ -17,13 +17,23 @@ class Usuario(Model):
         pass
 
     def save(self):
-        print('Metodo create de Usuario')
+        query = "insert into usuarios(id, dni, nombre, email, clave, isAdmin, ciudad_id) values (%s,%s,%s,%s,%s,%s,%s)"
+        value = (None, self.get_dni(), self.get_nombre(), self.get_email(), self.get_clave(), self.get_isAdmin(), self.get_ciudad_id())
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     def update(self):
-        print('Metodo update de Usuario')
+        pass
 
     def delete(self):
-        print('Metodo delete de Usuario')
+        sql = 'DELETE FROM usuarios WHERE id = %s '
+        value = (self.get_id(), )
+        # Ejecuto la query
+        self.__conection.cursor().execute(sql, value)
+        # Confirmo el delete
+        self.__conection.commit()
 
     """ 
         GETTERS Y SETTERS

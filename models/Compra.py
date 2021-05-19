@@ -18,14 +18,25 @@ class Compra(Model):
         pass
 
     def save(self):
-        print('Metodo create de la clase Compra')
+        query = "insert into compras(id, cantidad, precioTotal, producto_id, usuario_id) values (%s,%s,%s,%s,%s)"
+        value = (None,self.get_cantidad(), self.get_precioTotal(), self.get_producto_id(), self.get_usuario_id())
+        # Ejecuto la query
+        self.__conection.cursor().execute(query, value)
+        # Confirmo el insert
+        self.__conection.commit()
 
     def update(self):
-        print('Metodo update de la clase Compra')
+        pass
 
     def delete(self):
-        print('Metodo delete de la clase Compra')
-    
+        sql = 'DELETE FROM compras WHERE id = %s '
+        value = (self.get_id(), )
+        # Ejecuto la query
+        self.__conection.cursor().execute(sql, value)
+        # Confirmo el delete
+        self.__conection.commit()
+
+
     """ 
         GETTERS Y SETTERS
     """
