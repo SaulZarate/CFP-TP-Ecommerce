@@ -20,7 +20,8 @@ class AppController:
         print(usuarioLogeado) """
     
     def __init__(self):
-        pass
+        """ print(len(Producto().get_all())) """
+        """ print(Producto().find(5)) """
         # logearse
 
         # mostrar todos los productos

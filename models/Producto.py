@@ -13,10 +13,26 @@ class Producto(Model):
         self.__conection = Conection().get_conection()
 
     def find(self, id):
-        pass
+        sql = 'SELECT p.id, p.nombre, p.precio, p.descripcion, c.nombre as categoria, m.nombre as marca  FROM productos p,categorias c, marcas m '
+        sql += f' WHERE p.id = {id} and p.categoria_id = c.id and p.marca_id = m.id '
+
+        mycursor = self.__conection.cursor()
+        mycursor.execute(sql)
+        return mycursor.fetchone()
+
 
     def get_all(self):
-        pass
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT id, nombre, precio FROM productos ORDER BY id DESC')
+        result = mycursor.fetchall()
+        productos = []
+        for row in result:
+            producto = Producto()
+            producto.set_id(row[0])
+            producto.set_nombre(row[1])
+            producto.set_precio(row[2])
+            productos.append(producto)
+        return productos
 
     def save(self):
         query = "insert into productos (id, nombre, precio, descripcion, categoria_id, marca_id) values (%s,%s,%s,%s,%s,%s)"
