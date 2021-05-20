@@ -1,3 +1,4 @@
+import base64
 from database.Conection import Conection
 from models.Model import Model
 
@@ -9,16 +10,20 @@ class Usuario(Model):
         self.__nombre = ''
         self.__email = ''
         self.__clave = ''
-        self.__isAdmin = ''
+        self.__isAdmin = 0
         self.__ciudad_id = ''
         self.__conection = Conection().get_conection()
 
-    def find(id):
-        pass
+    def find(self, id):
+        sql = "SELECT * FROM usuarios WHERE id = %s"
+        value = (id, )
+        cursor = self.__conection.cursor()
+        cursor.execute(sql, value)
+        return cursor.fetchone()
 
     def save(self):
         query = "insert into usuarios(id, dni, nombre, email, clave, isAdmin, ciudad_id) values (%s,%s,%s,%s,%s,%s,%s)"
-        value = (None, self.get_dni(), self.get_nombre(), self.get_email(), self.get_clave(), self.get_isAdmin(), self.get_ciudad_id())
+        value = (None, self.get_dni(), self.get_nombre(), self.get_email(), self.encriptarPass(self.get_clave()), self.get_isAdmin(), self.get_ciudad_id())
         # Ejecuto la query
         self.__conection.cursor().execute(query, value)
         # Confirmo el insert
@@ -34,6 +39,25 @@ class Usuario(Model):
         self.__conection.cursor().execute(sql, value)
         # Confirmo el delete
         self.__conection.commit()
+
+    # INICIO DE SESION
+    def iniciar_sesion(self) -> object:
+        sql = "SELECT * FROM usuarios WHERE email = %s and clave = %s"
+        value = (self.get_email(), self.encriptarPass(self.get_clave()))
+        cursor = self.__conection.cursor()
+        cursor.execute(sql, value)
+        
+        result = cursor.fetchone()
+        return None if result == None else self.find(result[0])
+    
+
+    """ 
+        ENCRIPTACIONES
+    """
+    def encriptarPass(self, password):
+        return base64.encodebytes(bytes(password, 'utf-8')).decode('utf-8')
+    def desencriptarPass(self,password):
+        return base64.decodebytes(password.encode("UTF-8")).decode('utf-8')
 
     """ 
         GETTERS Y SETTERS
@@ -65,8 +89,8 @@ class Usuario(Model):
     
     def get_isAdmin(self):
         return self.__isAdmin
-    def set_isAdmin(self, isAdmin):
-        self.__isAdmin = isAdmin
+    """ def set_isAdmin(self, isAdmin):
+        self.__isAdmin = isAdmin """
     
     def get_ciudad_id(self):
         return self.__ciudad_id

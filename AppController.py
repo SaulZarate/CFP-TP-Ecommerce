@@ -13,8 +13,22 @@ from models.Usuario import Usuario
 
 class AppController:
 
+    """ user = Usuario()
+        user.set_email('saul@gmail.com')
+        user.set_clave('1234')
+        usuarioLogeado = user.iniciar_sesion()
+        print(usuarioLogeado) """
+    
     def __init__(self):
         pass
+        # logearse
+
+        # mostrar todos los productos
+
+        # comprar producto por id
+
+        # ver productos comprados
+
 
     def iniciar(self):
         pass
