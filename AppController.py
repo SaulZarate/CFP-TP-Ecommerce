@@ -9,7 +9,7 @@ from models.Provincia import Provincia
 from models.Usuario import Usuario
 
 # Views
-
+from views.Menu import Menu
 
 class AppController:
 
@@ -20,8 +20,11 @@ class AppController:
         print(usuarioLogeado) """
     
     def __init__(self):
-        """ print(len(Producto().get_all())) """
-        """ print(Producto().find(5)) """
+        self.__usuarioLogeado = None
+        self.__menuConsola = Menu()
+
+    def iniciar(self):
+        #self.__menuConsola.mostrar_menu('menu principal',{'1':'a','2':'b','3':'c','4':'d'})
         # logearse
 
         # mostrar todos los productos
@@ -29,7 +32,14 @@ class AppController:
         # comprar producto por id
 
         # ver productos comprados
+        self.__elegir_productos()
 
+    def __elegir_productos(self):
+        productos = Producto().get_all()
+        productosList = []
+        for producto in productos:
+            productosList.append({ str(producto.get_precio()) : producto.get_nombre() })
+        self.__menuConsola.mostrar_productos('Productos de la tienda', productosList)
 
-    def iniciar(self):
-        pass
+    def __set_usuario(self, usuario):
+        self.__usuarioLogeado = usuario
