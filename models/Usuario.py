@@ -21,7 +21,16 @@ class Usuario(Model):
         value = (id, )
         cursor = self.__conection.cursor()
         cursor.execute(sql, value)
-        return cursor.fetchone()
+        userDB = cursor.fetchone()
+        if userDB != None:
+            usuario = Usuario()
+            usuario.set_id(userDB[0])
+            usuario.set_dni(userDB[1])
+            usuario.set_nombre(userDB[2])
+            usuario.set_email(userDB[3])
+            usuario.set_isAdmin(userDB[5])
+            usuario.set_ciudad_id(userDB[6])
+        return None if userDB == None else usuario
 
     def save(self):
         query = "insert into usuarios(id, dni, nombre, email, clave, isAdmin, ciudad_id) values (%s,%s,%s,%s,%s,%s,%s)"
@@ -43,7 +52,7 @@ class Usuario(Model):
         self.__conection.commit()
 
     # INICIO DE SESION
-    def validarEmail(self):
+    def validar_email(self) -> bool:
         return validate_email(self.__email)
         
     def iniciar_sesion(self) -> object:
@@ -55,7 +64,6 @@ class Usuario(Model):
         result = cursor.fetchone()
         return None if result == None else self.find(result[0])
     
-
     """ 
         ENCRIPTACIONES
     """
@@ -64,6 +72,17 @@ class Usuario(Model):
     def desencriptarPass(self,password):
         return base64.decodebytes(password.encode("UTF-8")).decode('utf-8')
 
+    """ 
+        TO STRING
+    """
+    def __str__(self) -> str:
+        rol = 'Admin' if self.get_isAdmin() else 'Usuario'
+        toString = f'DNI: {self.get_dni()}\n'
+        toString += f'Nombre: {self.get_nombre()}\n'
+        toString += f'Email: {self.get_email()}\n'
+        toString += f'Rol: {rol}'
+        return toString
+    
     """ 
         GETTERS Y SETTERS
     """
@@ -94,8 +113,8 @@ class Usuario(Model):
     
     def get_isAdmin(self):
         return self.__isAdmin
-    """ def set_isAdmin(self, isAdmin):
-        self.__isAdmin = isAdmin """
+    def set_isAdmin(self, isAdmin):
+        self.__isAdmin = isAdmin
     
     def get_ciudad_id(self):
         return self.__ciudad_id
