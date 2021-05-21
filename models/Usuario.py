@@ -1,4 +1,6 @@
 import base64
+from validate_email import validate_email
+
 from database.Conection import Conection
 from models.Model import Model
 
@@ -41,6 +43,9 @@ class Usuario(Model):
         self.__conection.commit()
 
     # INICIO DE SESION
+    def validarEmail(self):
+        return validate_email(self.__email)
+        
     def iniciar_sesion(self) -> object:
         sql = "SELECT * FROM usuarios WHERE email = %s and clave = %s"
         value = (self.get_email(), self.encriptarPass(self.get_clave()))
