@@ -11,6 +11,18 @@ class Ciudad(Model):
 
     def find(self, id):
         pass
+    
+    def getAll(self):
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT id, nombre FROM ciudades ORDER BY id ASC')
+        result = mycursor.fetchall()
+        ciudades = []
+        for row in result:
+            ciudad = Ciudad()
+            ciudad.set_id(row[0])
+            ciudad.set_nombre(row[1])
+            ciudades.append(ciudad)
+        return ciudades
 
     def save(self):
         query = "insert into ciudades(id, nombre, provincia_id) values (%s,%s,%s)"

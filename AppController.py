@@ -11,6 +11,8 @@ from models.Usuario import Usuario
 # Views
 from views.Consola import Consola
 
+import pprint
+
 class AppController:
     
     def __init__(self):
@@ -18,8 +20,10 @@ class AppController:
         self.__viewConsola = Consola()
 
     def iniciar(self):
-        datosRegistroUsuario = self.__registrarse()
-        print(datosRegistroUsuario)
+        #datosRegistroUsuario = self.__registrarse()
+        #print(datosRegistroUsuario)
+        ciudades = Ciudad().getAll()
+        
         #self.__menu_principal()
         #self.__productos_de_la_tienda()
         
