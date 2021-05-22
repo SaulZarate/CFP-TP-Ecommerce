@@ -1,12 +1,16 @@
 import os
 import time
+from validate_email import validate_email
 
 class Consola:
 
-    def __limpiar_consola(self, timer = 0):
+    def limpiar_consola(self, timer = 0):
         time.sleep(timer)
         clearConsole = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
         clearConsole()
+
+    def mostrar_mensaje(self, message, timer = 0):
+        print(message)
 
     def mostrar_menu(self, titulo, contenido ) -> int:
         while(True): 
@@ -18,7 +22,7 @@ class Consola:
                 if key == '' or value == '':
                     print('*')
                 else:
-                    print('*\t' + key + '- ' + value)
+                    print('*\t' + key + '. ' + value)
             print('*')
             print('****************************************')
             opcion = input('*\tOpcion: ')
@@ -26,15 +30,18 @@ class Consola:
             try:
                 opcionElegida = int(opcion)
                 if str(opcionElegida) in contenido.keys():
-                    self.__limpiar_consola()
+                    self.limpiar_consola()
                     return int(opcionElegida)
             except:
                 pass
             print('*\t¡¡¡ Opcion invalida !!!')
             print('*')
             print('****************************************')
-            self.__limpiar_consola(1.5)
+            self.limpiar_consola(1.5)
     
+    """ 
+        PRODUCTOS
+    """
     def mostrar_todos_los_productos(self, productos) -> int:
         # Opciones validas ( codigos de productos y 0 )
         opcionesValidas = [0]
@@ -58,57 +65,87 @@ class Consola:
             try:
                 opcionElegida = int(opcion)
                 if opcionElegida in opcionesValidas:
-                    self.__limpiar_consola(1)
+                    self.limpiar_consola(1)
                     return opcionElegida
             except:
                 pass
             print('*\t¡¡¡ Opcion invalida !!!')
             print('*')
             print('****************************************')
-            self.__limpiar_consola(1.5)
+            self.limpiar_consola(1.5)
     
+    """ 
+        FORMULARIOS
+    """
     def inputs_formulario(self, datosSolicitados) -> dict:
+        """ 
+            [
+                {
+                    'text': 'texto del label', 
+                    'type': 'tipo de input (str, int, float)', 
+                    'name': 'key del diccionario que devuelve'
+                },
+                { 
+                    ... 
+                }
+            ]
+        """
         resultados = {}
         while True:
+            mensaje = ''
             for dato in datosSolicitados:
-                inputUser = input(dato['text'] + ': ')
+                inputUser = input(dato['text'] + ': ').strip()
                 try:
                     if dato['type'] == 'int':
-                        value = int(value)
+                        inputUser = int(inputUser)
+                        mensaje = '* Solo se permiten numeros enteros'
                     elif dato['type'] == 'float':
-                        value = float(value)
+                        inputUser = float(inputUser)
+                        mensaje = '* Solo se permiten numeros con decimales'
+                    elif dato['type'] == 'email' and not validate_email(inputUser):
+                        mensaje = '* El email ingresado es invalido'
+                        raise Exception('*Email envalido')
+                        
                     resultados[dato['name']] = inputUser
                 except:
                     resultados={}
                     break
             if resultados == {}:
-                print()
-                print('\t¡¡¡Ingreso un dato invalido, vuelva a intentarlo!!!')
-                self.__limpiar_consola(1.5)
+                print(mensaje)
+                self.limpiar_consola(1.5)
             else:
                 return resultados
     
     def select_formulario(self, datosSolicitado) -> dict:
         """ 
         {
-            'values' : []
-            'text' : ...
-            'type' : ...
-            'name' : ...
+            'values' : [
+                {
+                    id1: int , 
+                    value1: str
+                },
+                {
+                    id2: int,
+                    value2: str
+                }
+                ],
+            'text' : 'titulo del select' ,
+            'name' : 'key del selecet que devuelve'
         }
         """
+        opcionesValidas = list( map(lambda option: option['id'], datosSolicitado['values']) )
+
+        print('CIUDADES:')
+        for option in datosSolicitado['values']:
+            print('Codigo: ' + str(option['id']) + '\tNombre: ' + option['value'] )
+        inputUser = input(datosSolicitado['text'] + ': ')
+        
         while True:
-            inputUser = input(datosSolicitado['text'] + ': ')
             try:
-                value = None
-                if datosSolicitado['type'] == 'int':
-                    value = int(inputUser)
-                if datosSolicitado['type'] == 'float':
-                    value = int(inputUser)
-                if value in datosSolicitado['values']:
-                    self.__limpiar_consola()
-                    return value
+                value = int(inputUser.strip())
+                if value in opcionesValidas:
+                    self.limpiar_consola()
+                    return { datosSolicitado['name'] : value}
             except: 
                 pass
-            print('******** Valor incorrecto, vuelva a intentar ********')
-            print()
+            inputUser = input('* Valor invalido, vuelva a intentar: ')
