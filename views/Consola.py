@@ -6,6 +6,9 @@ import pprint
 
 class Consola:
 
+    def __init__(self) -> None:
+        self.limpiar_consola()
+
     def limpiar_consola(self, timer = 0):
         time.sleep(timer)
         clearConsole = lambda: os.system('cls' if os.name in ('nt', 'dos') else 'clear')
@@ -108,9 +111,9 @@ class Consola:
                     self.limpiar_consola()
                     return unidadesInt
                 else:
-                    mensaje = '* ¡¡¡ Solo se pueden comprar 5 productos como maximo !!!'
+                    mensaje = '*\t¡¡¡ Solo se pueden comprar 5 productos como maximo !!!'
             except:
-                mensaje = '* ¡¡¡ Solo se permiten numeros enteros !!!'
+                mensaje = '*\t¡¡¡ Solo se permiten numeros enteros !!!'
             print(mensaje)
             self.limpiar_consola(2)
 
@@ -132,7 +135,7 @@ class Consola:
         """
         print('*******************************************************************************')
         print('*')
-        print('*\t\t\tTODAS TUS COMPRAS')
+        print('*\t\t\tMIS COMPRAS')
         print('*')
         print('*\tPRECIO\t\tUNIDAD\t\tPRECIO TOTAL\tPRODUCTO' )
         for compra in compras:
