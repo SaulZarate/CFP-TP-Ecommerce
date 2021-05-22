@@ -76,7 +76,45 @@ class Consola:
             print('****************************************')
             self.limpiar_consola(1.5)
     
-    """ 
+    def mostrar_detalle_del_producto(self, producto) -> int:
+        """ 
+            {
+                'nombre' : '...',
+                'precio' : '...',
+                'descripcion' : '...'
+                'categoria' : '...',
+                'marca' : '...',
+            }
+        """
+        self.limpiar_consola()
+        while True:
+            print('**********************************************************************')
+            print('*')
+            print('*\t' + producto['nombre'].upper())
+            print('*')
+            print('*\tPrecio: $' + producto['precio'])
+            print('*\tCategoria: ' + producto['categoria'])
+            print('*\tMarca: ' + producto['marca'])
+            print('*\tDescripcion: ' + producto['descripcion'])
+            print('*')
+            print('**********************************************************************')
+            print('*\tIngrese la cantidad de productos que desee comprar')
+            unidades = input('*\tUnidades: ')
+            
+            try:
+                unidadesInt = int(unidades)
+
+                if unidadesInt >= 0 and unidadesInt <= 5:
+                    self.limpiar_consola()
+                    return unidadesInt
+                else:
+                    mensaje = '* ¡¡¡ Solo se pueden comprar 5 productos como maximo !!!'
+            except:
+                mensaje = '* ¡¡¡ Solo se permiten numeros enteros !!!'
+            print(mensaje)
+            self.limpiar_consola(2)
+
+    """         
         COMPRAS
     """
     def mostrar_todas_las_compras_del_usuario(self, compras):

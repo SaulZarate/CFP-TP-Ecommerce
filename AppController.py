@@ -18,14 +18,15 @@ class AppController:
         self.__viewConsola = Consola()
 
     def iniciar(self):
-        opcionMenuPrincipal = None
-        opcionMenuTienda = None
-        opcionMenuProductos = None
+        opcionMenuPrincipal = None # Login, registro y salir
+        opcionMenuTienda = None # Ver productos, compras, cerrar sesion o salir
+        codigoDelProducto = None # Detalle del producto o volver al menu de la tienda
+        unidadesAComprar = None # Unidades o volver al menu de la tienda
 
         while True:
             opcionMenuPrincipal = self.__menu_principal() if opcionMenuPrincipal == None else opcionMenuPrincipal 
 
-            if opcionMenuPrincipal == 1: # ~~~~~~~~~~~~~~~~~~~~~~~~> INICIO DE SESION 
+            if opcionMenuPrincipal == 1: # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> INICIO DE SESION 
 
                 """ -------------------------- """
                 """ ---- INICIO DE SESION ---- """
@@ -38,7 +39,6 @@ class AppController:
                 """ --------------------------- """
                 """ ---- MENU DE LA TIENDA ---- """
                 """ --------------------------- """
-                #opcionMenuTienda = self.__menu_de_la_tienda() if opcionMenuTienda == None else opcionMenuTienda
                 if opcionMenuTienda == None: 
                     opcionMenuTienda = self.__menu_de_la_tienda()
 
@@ -47,13 +47,24 @@ class AppController:
                 # ---- VER TODOS LOS PRODUCTOS ----
                 # ---------------------------------
                 if opcionMenuTienda == 1: 
-                    opcionMenuProductos = self.__productos_de_la_tienda() if opcionMenuProductos == None else opcionMenuProductos
+                    # codigo del producto o 0 para volver al menu de la tienda
+                    if codigoDelProducto == None:
+                        codigoDelProducto = self.__productos_de_la_tienda()
 
-                    if opcionMenuProductos == 0: # ---- Ir al menu de la tienda
-                        opcionMenuPrincipal = 1
-                        opcionMenuTienda = None
-                        opcionMenuProductos = None
-                        continue
+                    # ------------------------------
+                    # ---- Detalle del producto ----
+                    # ------------------------------
+                    if codigoDelProducto != 0: 
+                        # Unidades que desea comprar
+                        unidadesAComprar = self.__detalle_del_producto(codigoDelProducto)
+                        if unidadesAComprar != 0:
+                            self.__comprar_producto(codigoDelProducto, unidadesAComprar)
+                    
+                    opcionMenuPrincipal = 1
+                    opcionMenuTienda = None
+                    codigoDelProducto = None
+                    unidadesAComprar = None
+                    continue
 
                 # -------------------------
                 # ---- VER MIS COMPRAS ----
@@ -70,7 +81,7 @@ class AppController:
                     self.__usuarioLogeado = None
                     opcionMenuPrincipal = None
                     opcionMenuTienda = None
-                    opcionMenuProductos = None
+                    codigoDelProducto = None
                     continue
                 
                 # --------------------
@@ -79,18 +90,19 @@ class AppController:
                 else: 
                     break
 
-            elif opcionMenuPrincipal == 2: # ~~~~~~~~~~~~~~~~~~~~~~~~> REGISTRAR USUARIO 
+            elif opcionMenuPrincipal == 2: # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> REGISTRAR USUARIO 
                 self.__registrar_usuario()
                 # Lo redirijo al menu principal
                 opcionMenuPrincipal = None
 
-            else:  # ~~~~~~~~~~~~~~~~~~~~~~~~> CERRAR APP 
+            else:  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~> CERRAR APP 
                 break
         
         # CERRAR APP
     
     def pruebas(self):
-        pass
+        self.__seccion_del_cliente()
+        #self.__seccion_del_administrador()
 
     """ 
         INICIO DE SESION & REGISTRO 
@@ -195,6 +207,75 @@ class AppController:
                 self.__viewConsola.limpiar_consola()
                 return 0
 
+    """ 
+        ADMINISTRADOR & CLIENTE
+    """
+    def __seccion_del_administrador(self) -> int:
+        """ 
+            return 0 = salir de la App
+            return 1 = cerrar sesion
+        """
+        return None
+
+    def __seccion_del_cliente(self) -> int:
+        """ 
+            return 0 = salir de la App
+            return 1 = cerrar sesion
+        """
+        opcionMenuTienda = None 
+        codigoDelProducto = None 
+        unidadesAComprar = None 
+        while True:
+            # MENU PRINCIPAL
+            if opcionMenuTienda == None:
+                opcionMenuTienda = self.__menu_de_la_tienda()
+
+            # ---------------------------------
+            # ---- VER TODOS LOS PRODUCTOS ----
+            # ---------------------------------
+            if opcionMenuTienda == 1: 
+                # codigo del producto o 0 para volver al menu de la tienda
+                if codigoDelProducto == None:
+                    codigoDelProducto = self.__productos_de_la_tienda()
+
+                # ------------------------------
+                # ---- Detalle del producto ----
+                # ------------------------------
+                if codigoDelProducto != 0: 
+                    # Unidades que desea comprar
+                    unidadesAComprar = self.__detalle_del_producto(codigoDelProducto)
+                    if unidadesAComprar != 0:
+                        self.__comprar_producto(codigoDelProducto, unidadesAComprar)
+                
+                opcionMenuPrincipal = 1
+                opcionMenuTienda = None
+                codigoDelProducto = None
+                unidadesAComprar = None
+                continue
+
+            # -------------------------
+            # ---- VER MIS COMPRAS ----
+            # -------------------------
+            elif opcionMenuTienda == 2:
+                opcionMenuTienda = None
+                self.__productos_comprados_del_cliente()
+
+
+            # -----------------------
+            # ---- CERRAR SESION ----
+            # -----------------------
+            elif opcionMenuTienda == 3: 
+                self.__usuarioLogeado = None
+                opcionMenuPrincipal = None
+                opcionMenuTienda = None
+                codigoDelProducto = None
+                continue
+            
+            # --------------------
+            # ---- CERRAR APP ---- 
+            # --------------------
+            else: 
+                break
 
     """ 
         TIENDA
@@ -248,3 +329,23 @@ class AppController:
             # Muestro todos las compras del usuario
             self.__viewConsola.mostrar_todas_las_compras_del_usuario(comprasFormateadas)
     
+    def __detalle_del_producto(self, producto_id):
+        producto = Producto().find(producto_id)
+        categoriaDelProducto = Categoria().find(producto.get_categoria_id())
+        marcaDelProducto = Marca().find(producto.get_marca_id())
+        return self.__viewConsola.mostrar_detalle_del_producto({
+            'nombre' : producto.get_nombre(),
+            'precio' : str(producto.get_precio()),
+            'descripcion' : producto.get_descripcion(),
+            'categoria' : categoriaDelProducto.get_nombre(),
+            'marca' : marcaDelProducto.get_nombre()
+        })
+
+    def __comprar_producto(self, producto_id, cantidad):
+        producto = Producto().find(producto_id)
+        compra = Compra()
+        compra.set_cantidad(cantidad)
+        compra.set_precioTotal(producto.get_precio()*cantidad)
+        compra.set_producto_id(producto_id)
+        compra.set_usuario_id(self.__usuarioLogeado.get_id())
+        compra.save()
