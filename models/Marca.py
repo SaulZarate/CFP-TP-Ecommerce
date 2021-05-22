@@ -9,7 +9,22 @@ class Marca(Model):
         self.__conection = Conection().get_conection()
 
     def find(self, id):
-        pass
+        sql = f'SELECT \
+                    * \
+                FROM \
+                    marcas \
+                WHERE \
+                    id = {id} '
+        mycursor = self.__conection.cursor()
+        mycursor.execute(sql)
+        result = mycursor.fetchone()
+        if result == None:
+            return None
+        else:
+            marca = Marca()
+            marca.set_id(result[0])
+            marca.set_nombre(result[1])
+            return marca
 
     def save(self):
         query = "insert into marcas(id, nombre) values (%s,%s)"
