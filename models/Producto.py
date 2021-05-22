@@ -12,14 +12,27 @@ class Producto(Model):
         self.__marca_id = None
         self.__conection = Conection().get_conection()
 
-    def find(self, id):
-        sql = f'SELECT p.id, p.nombre, p.precio, p.descripcion, c.nombre as categoria, m.nombre as marca \
-                FROM productos p, categorias c, marcas m \
-                WHERE p.id = {id} and p.categoria_id = c.id and p.marca_id = m.id '
-
+    def find(self, id) -> object:
+        sql = f'SELECT \
+                    * \
+                FROM \
+                    productos \
+                WHERE \
+                    id = {id} '
         mycursor = self.__conection.cursor()
         mycursor.execute(sql)
-        return mycursor.fetchone()
+        result = mycursor.fetchone()
+        if result == None:
+            return None
+        else:
+            producto = Producto()
+            producto.set_id(result[0])
+            producto.set_nombre(result[1])
+            producto.set_precio(result[2])
+            producto.set_descripcion(result[3])
+            producto.set_categoria_id(result[4])
+            producto.set_marca_id(result[5])
+            return producto
 
     def get_all(self):
         mycursor = self.__conection.cursor()

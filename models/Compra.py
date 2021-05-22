@@ -4,15 +4,36 @@ from models.Model import Model
 class Compra(Model):
 
     def __init__(self):
-        self.__id = ''
-        self.__cantidad = ''
-        self.__precioTotal = ''
-        self.__producto_id = ''
-        self.__usuario_id = ''
+        self.__id = None
+        self.__cantidad = None
+        self.__precioTotal = None
+        self.__producto_id = None
+        self.__usuario_id = None
         self.__conection = Conection().get_conection()
     
-    def getAllForUsuarioId(self, usuario_id):
-        pass
+    def get_all_for_usuario_id(self) -> list:
+        sql = f'SELECT \
+                    c.cantidad , \
+                    c.precioTotal , \
+                    c.producto_id \
+                FROM \
+                    compras c, \
+                    productos p \
+                where \
+                    c.producto_id = p.id AND \
+                    c.usuario_id = {self.__usuario_id} \
+                ORDER BY c.id DESC'
+        mycursor = self.__conection.cursor()
+        mycursor.execute(sql)
+        result = mycursor.fetchall()
+        compras = []
+        for row in result:
+            compra = Compra()
+            compra.set_cantidad(row[0])
+            compra.set_precioTotal(row[1])
+            compra.set_producto_id(row[2])
+            compras.append(compra)
+        return [] if len(compras) == 0 else compras
 
     def get_all(self):
         pass
