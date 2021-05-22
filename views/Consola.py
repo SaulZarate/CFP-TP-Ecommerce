@@ -2,6 +2,8 @@ import os
 import time
 from validate_email import validate_email
 
+import pprint
+
 class Consola:
 
     def limpiar_consola(self, timer = 0):
@@ -65,7 +67,7 @@ class Consola:
             try:
                 opcionElegida = int(opcion)
                 if opcionElegida in opcionesValidas:
-                    self.limpiar_consola(1)
+                    self.limpiar_consola()
                     return opcionElegida
             except:
                 pass
@@ -74,6 +76,35 @@ class Consola:
             print('****************************************')
             self.limpiar_consola(1.5)
     
+    """ 
+        COMPRAS
+    """
+    def mostrar_todas_las_compras_del_usuario(self, compras):
+        """ 
+            [{
+                'producto' : {
+                    'nombre' : '...' ,
+                    'precio' : '...'
+                },
+                'unidades' : '...',
+                'precioTotal' : '...'
+            },
+            ...
+            ]
+        """
+        print('*******************************************************************************')
+        print('*')
+        print('*\t\t\tTODAS TUS COMPRAS')
+        print('*')
+        print('*\tPRECIO\t\tUNIDAD\t\tPRECIO TOTAL\tPRODUCTO' )
+        for compra in compras:
+            producto = compra['producto']
+            print(f'*\t$' + producto['precio'] + '\t\t'+compra['unidades'] + '\t\t$'+compra['precioTotal'] + '\t\t' + producto['nombre'])
+        print('*')
+        print('*******************************************************************************')
+        input('* Ingrese cualquier letra para volver al menu de la tienda: ')
+        self.limpiar_consola()
+
     """ 
         FORMULARIOS
     """
