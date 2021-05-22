@@ -1,5 +1,4 @@
 import base64
-from validate_email import validate_email
 
 from database.Conection import Conection
 from models.Model import Model
@@ -7,13 +6,13 @@ from models.Model import Model
 class Usuario(Model):
     
     def __init__(self):
-        self.__id = ''
+        self.__id = 0
         self.__dni = ''
         self.__nombre = ''
         self.__email = ''
         self.__clave = ''
         self.__isAdmin = 0
-        self.__ciudad_id = ''
+        self.__ciudad_id = 0
         self.__conection = Conection().get_conection()
 
     def find(self, id):
@@ -31,6 +30,22 @@ class Usuario(Model):
             usuario.set_isAdmin(userDB[5])
             usuario.set_ciudad_id(userDB[6])
         return None if userDB == None else usuario
+
+    def get_all(self):
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT * FROM usuarios ORDER BY id ASC')
+        result = mycursor.fetchall()
+        usuarios = []
+        for row in result:
+            usuario = Usuario()
+            usuario.set_id(row[0])
+            usuario.set_dni(row[1])
+            usuario.set_nombre(row[2])
+            usuario.set_email(row[3])
+            usuario.set_isAdmin(row[5])
+            usuario.set_ciudad_id(row[6])
+            usuarios.append(usuario)
+        return usuarios
 
     def save(self):
         query = "insert into usuarios(id, dni, nombre, email, clave, isAdmin, ciudad_id) values (%s,%s,%s,%s,%s,%s,%s)"
@@ -52,8 +67,13 @@ class Usuario(Model):
         self.__conection.commit()
 
     # INICIO DE SESION
-    def validar_email(self) -> bool:
-        return validate_email(self.__email)
+    def existe_dni(self) -> bool:
+        dniUsuarios = list( map(lambda user: user.get_dni(), self.get_all()) )
+        return self.__dni in dniUsuarios
+
+    def existe_email(self) -> bool:
+        emailUsuarios = list( map(lambda user: user.get_email(), self.get_all()) )
+        return self.__email in emailUsuarios
         
     def iniciar_sesion(self) -> object:
         sql = "SELECT * FROM usuarios WHERE email = %s and clave = %s"
