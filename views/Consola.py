@@ -42,7 +42,7 @@ class Consola:
             print('*\t¡¡¡ Opcion invalida !!!')
             print('*')
             print('****************************************')
-            self.limpiar_consola(1.5)
+            self.limpiar_consola(1.3)
     
     """ 
         PRODUCTOS
@@ -230,12 +230,16 @@ class Consola:
         print('*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*')
         print('*************************************************************************************************************************')
         print('*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*')
-        print('*\tId\tUnidad\t\tPrecioVenta\tIdProducto\tMarcaProducto\tIdUsuarios\tEmailUsuarios\t\t*')
+        print('*\t Id\tUnidades x\tTotal de\tCodigo del\tMarca del\t   Id\t\t\t\t\t*')
+        print('*\tVenta\t Producto\tla venta\t Producto\tProducto\t Usuario\tEmail del usuario\t*')
+        #print('*\tId\tUnidad\t\tPrecioVenta\tIdProducto\tMarcaProducto\tIdUsuarios\tEmailUsuarios\t\t*')
         for venta in ventas:
-            fila = '*\t' + venta['id'] + '\t  ' + venta['unidad'] + '\t\t$' + venta['precioTotal'] + '\t\t    '
+            fila = '*\t  ' + venta['id'] + '\t    ' + venta['unidad'] + '\t\t$' + venta['precioTotal']
+            fila += '\t\t    ' if ( len(venta['precioTotal'])+1 ) < 8 else '\t    '
             fila += venta['producto']['id'] + '\t\t' + venta['producto']['marca']
             fila += '\t\t' if len(venta['producto']['marca']) < 8 else '\t'
-            fila += '    ' + venta['usuario']['id'] + '\t\t' + venta['usuario']['email'] + '\t*'
+            fila += '   ' + venta['usuario']['id'] + '\t\t' + venta['usuario']['email']
+            fila += '\t\t*' if len(venta['usuario']['email']) < 16 else '\t*'
             print(fila)
         print('*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*')
         print('*************************************************************************************************************************')
@@ -245,10 +249,6 @@ class Consola:
         print('*************************************************************************************************************************')
         input('Ingrese cualquier letra para salir')
         self.limpiar_consola()
-        """ ventasRealizadas
-        unidadesVendidas
-        ingreso
-        usuariosActivos """
     
     """ 
         FORMULARIOS

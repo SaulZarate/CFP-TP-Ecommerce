@@ -38,9 +38,11 @@ class AppController:
                 
                 # ---- VISTAS DEL ADMIN ----
                 if self.__usuarioLogeado.get_isAdmin():
-                    print('Es admin')
+                    opctionAdmin = self.__seccion_del_administrador()
+
+                    if opctionAdmin == 0: # CERRAR APP
+                        break
                     self.__usuarioLogeado = None
-                    self.__viewConsola.limpiar_consola(5)
                     continue
 
                 # ---- VISTAS DEL CLIENTE ----
@@ -200,7 +202,6 @@ class AppController:
             # ~~~~~~~~ SALIR ~~~~~~~~
             else:
                 return 0
-            self.__viewConsola.limpiar_consola(1.3)
 
     def __seccion_del_cliente(self) -> int:
         """ 
