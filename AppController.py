@@ -1,4 +1,6 @@
 # Models
+from re import T
+from time import time
 from models.Categoria import Categoria
 from models.Ciudad import Ciudad
 from models.Compra import Compra
@@ -62,21 +64,12 @@ class AppController:
         # CERRAR APP
     
     def pruebas(self):
-        pass
-        #self.__seccion_del_cliente()
+        self.__admin_registro_de_ventas()
         #self.__seccion_del_administrador()
 
     """ 
         INICIO DE SESION & REGISTRO 
     """
-    def __menu_principal(self)->int:
-        return self.__viewConsola.mostrar_menu('Menu Principal', {
-            '1':'Iniciar sesion',
-            '2':'Registrarse',
-            '':'',
-            '0':'salir'
-        })
-    
     def __registrar_usuario(self):
         datosUsuario = self.__pedir_datos_para_registrarse()
         usuario = Usuario()
@@ -114,7 +107,7 @@ class AppController:
         usuario.save()
         # Muestro mensaje
         self.__viewConsola.mostrar_mensaje('* Usuario registrado correctamente')
-        self.__viewConsola.limpiar_consola(3)
+        self.__viewConsola.limpiar_consola(2)
 
     def __pedir_datos_para_registrarse(self) -> dict:
         # Inputs
@@ -170,14 +163,44 @@ class AppController:
                 return 0
 
     """ 
-        ADMINISTRADOR & CLIENTE
+        SECCION DEL ADMINISTRADOR & CLIENTE
     """
     def __seccion_del_administrador(self) -> int:
         """ 
-            return 0 = salir de la App
-            return 1 = cerrar sesion
+            0 = Cerrar App | 3 = Cerrar sesion
         """
-        return None
+        while True: 
+            menuPrincipalDelAdmin = self.__admin_menu_principal()
+
+            # ~~~~~~~~ PRODUCTOS ~~~~~~~~
+            if menuPrincipalDelAdmin == 1:
+                # id del producto a editar
+                idProducto = self.__admin_productos_de_la_tienda()
+            
+            # ~~~~~~~~ VENTAS ~~~~~~~~
+            elif menuPrincipalDelAdmin == 2:
+                self.__admin_registro_de_ventas()
+            
+            # ~~~~~~~~ CATEGORIAS ~~~~~~~~
+            elif menuPrincipalDelAdmin == 3:
+                print('Categorias')
+            
+            # ~~~~~~~~ MARCAS ~~~~~~~~
+            elif menuPrincipalDelAdmin == 4:
+                print('Marcas')
+            
+            # ~~~~~~~~ USUARIOS ~~~~~~~~
+            elif menuPrincipalDelAdmin == 5:
+                print('Usuarios')
+            
+            # ~~~~~~~~ CERRAR SESION ~~~~~~~~ 
+            elif menuPrincipalDelAdmin == 9:
+                return 3
+            
+            # ~~~~~~~~ SALIR ~~~~~~~~
+            else:
+                return 0
+            self.__viewConsola.limpiar_consola(1.3)
 
     def __seccion_del_cliente(self) -> int:
         """ 
@@ -213,8 +236,16 @@ class AppController:
                 return 0
 
     """ 
-        TIENDA
+        TIENDA CLIENTE
     """
+    def __menu_principal(self)->int:
+        return self.__viewConsola.mostrar_menu('Menu Principal', {
+            '1':'Iniciar sesion',
+            '2':'Registrarse',
+            '':'',
+            '0':'Salir'
+        })
+        
     def __menu_de_la_tienda(self)->int:
         return self.__viewConsola.mostrar_menu('Menu de la Tienda',{
             '1':'Ver Productos',
@@ -284,3 +315,63 @@ class AppController:
         compra.set_producto_id(producto_id)
         compra.set_usuario_id(self.__usuarioLogeado.get_id())
         compra.save()
+    
+    """ 
+        TIENDA ADMIN
+    """
+    def __admin_menu_principal(self) -> int:
+        return self.__viewConsola.mostrar_menu('Menu principal de Administrador', {
+            '1':'Productos',
+            '2':'Ventas',
+            '3':'Categorias',
+            '4':'Marcas',
+            '5':'Usuarios',
+            '':'',
+            '9':'Cerrar Sesion',
+            '0':'Salir'
+        })
+
+    def __admin_productos_de_la_tienda(self) -> int:
+        """ 
+            0 => Menu Admin | producto_id => Para Editar 
+        """
+        productosTienda = Producto().get_all()
+        productos = []
+        for producto in productosTienda:
+            productos.append({
+                'id': str(producto.get_id()),
+                'nombre': producto.get_nombre(),
+                'precio': str(producto.get_precio()),
+                'categoria': Categoria().find(producto.get_categoria_id()).get_nombre(),
+                'marca': Marca().find(producto.get_marca_id()).get_nombre()
+            })
+        self.__viewConsola.admin_mostrar_todos_los_productos(productos)
+
+    def __admin_registro_de_ventas(self):
+        ventasDB = Compra().get_all()
+        ventas = []
+        for venta in ventasDB:
+            producto = Producto().find(venta.get_producto_id())
+            usuario = Usuario().find(venta.get_usuario_id())
+            marca = Marca().find(producto.get_marca_id())
+            ventas.append({
+                'id' : str(venta.get_id()),
+                'unidad' : str(venta.get_cantidad()),
+                'precioTotal' : str(venta.get_precioTotal()),
+                'producto' : {
+                    'id' : str(producto.get_id()),
+                    'marca' : marca.get_nombre()
+                },
+                'usuario' : {
+                    'id' : str(usuario.get_id()),
+                    'email' : usuario.get_email()
+                }
+            })
+
+        if len(ventas) == 0:
+            self.__viewConsola.mostrar_mensaje('* No se realizo ninguna venta')
+            self.__viewConsola.limpiar_consola(1.3)
+        else:
+            self.__viewConsola.admin_mostrar_todas_las_ventas(ventas, Compra().reporte_de_ventas())
+
+

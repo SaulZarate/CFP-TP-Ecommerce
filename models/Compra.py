@@ -36,7 +36,19 @@ class Compra(Model):
         return [] if len(compras) == 0 else compras
 
     def get_all(self):
-        pass
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT * FROM compras ORDER BY id DESC')
+        result = mycursor.fetchall()
+        compras = []
+        for row in result:
+            compra = Compra()
+            compra.set_id(row[0])
+            compra.set_cantidad(row[1])
+            compra.set_precioTotal(row[2])
+            compra.set_producto_id(row[3])
+            compra.set_usuario_id(row[4])
+            compras.append(compra)
+        return [] if len(compras) == 0 else compras
 
     def save(self):
         query = "insert into compras(id, cantidad, precioTotal, producto_id, usuario_id) values (%s,%s,%s,%s,%s)"
@@ -57,6 +69,33 @@ class Compra(Model):
         # Confirmo el delete
         self.__conection.commit()
 
+
+    def reporte_de_ventas(self) -> dict:
+        """ 
+            return {
+                'ventasRealizadas' : '...'
+                'unidadesVendidas' : '...'
+                'ingresos' : '...'
+                'usuariosActivos' : '...'
+            }
+        """
+        sql = ' \
+            SELECT \
+                COUNT(id) AS ventasRealizadas, \
+                SUM(cantidad) AS unidadesVendidas, \
+                SUM(precioTotal) AS ingresos, \
+                COUNT( DISTINCT usuario_id) AS usuariosActivos \
+            FROM \
+                compras'
+        mycursor = self.__conection.cursor()
+        mycursor.execute(sql)
+        result = mycursor.fetchone()
+        return {
+            'ventasRealizadas' : str(result[0]),
+            'unidadesVendidas' : str(result[1]),
+            'ingresos' : str(result[2]),
+            'usuariosActivos' : str(result[3])
+        }
 
     """ 
         GETTERS Y SETTERS

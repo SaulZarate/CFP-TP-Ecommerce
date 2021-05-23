@@ -36,7 +36,7 @@ class Producto(Model):
 
     def get_all(self):
         mycursor = self.__conection.cursor()
-        mycursor.execute('SELECT id, nombre, precio FROM productos ORDER BY id ASC')
+        mycursor.execute('SELECT id, nombre, precio, categoria_id, marca_id FROM productos ORDER BY id DESC')
         result = mycursor.fetchall()
         productos = []
         for row in result:
@@ -44,8 +44,10 @@ class Producto(Model):
             producto.set_id(row[0])
             producto.set_nombre(row[1])
             producto.set_precio(row[2])
+            producto.set_categoria_id(row[3])
+            producto.set_marca_id(row[4])
             productos.append(producto)
-        return productos
+        return [] if len(productos) == 0 else productos
 
     """ 
         ABM 
