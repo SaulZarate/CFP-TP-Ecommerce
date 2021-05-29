@@ -2,8 +2,6 @@ import os
 import time
 from validate_email import validate_email
 
-import pprint
-
 class Consola:
 
     def __init__(self) -> None:

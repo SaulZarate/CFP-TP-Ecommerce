@@ -1,5 +1,4 @@
 # Models
-from re import T
 from time import time
 from models.Categoria import Categoria
 from models.Ciudad import Ciudad
@@ -65,10 +64,6 @@ class AppController:
         
         # CERRAR APP
     
-    def pruebas(self):
-        self.__admin_registro_de_ventas()
-        #self.__seccion_del_administrador()
-
     """ 
         INICIO DE SESION & REGISTRO 
     """

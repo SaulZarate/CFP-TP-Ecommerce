@@ -11,4 +11,3 @@ from AppController import AppController
 """
 
 AppController().iniciar()
-#AppController().pruebas()
