@@ -8,6 +8,9 @@ class Categoria(Model):
         self.__nombre = ''
         self.__conection = Conection().get_conection()
 
+    def __str__(self) -> str:
+        return f"id({self.get_id()}) - nombre({self.get_nombre()})"
+
     def find(self, id):
         sql = f'SELECT \
                     * \
@@ -25,6 +28,18 @@ class Categoria(Model):
             categoria.set_id(result[0])
             categoria.set_nombre(result[1])
             return categoria
+
+    def get_all(self):
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT id, nombre FROM categorias')
+        result = mycursor.fetchall()
+        categorias = []
+        for row in result:
+            categoria = Categoria()
+            categoria.set_id(row[0])
+            categoria.set_nombre(row[1])
+            categorias.append(categoria)
+        return [] if len(categorias) == 0 else categorias
 
     def save(self):
         query = "insert into categorias(id, nombre) values (%s,%s)"

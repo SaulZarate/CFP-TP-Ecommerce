@@ -124,7 +124,8 @@ class AppController:
         ciudadElegida = self.__viewConsola.select_formulario({
             'values': ciudadesValidas,
             'text': 'Ingrese el codigo de su ciudad',
-            'name': 'ciudad_id'
+            'name': 'ciudad_id',
+            'title' : 'CIUDADES'
         })
         inputsUsuario.update(ciudadElegida)
         return inputsUsuario
@@ -172,7 +173,13 @@ class AppController:
             # ~~~~~~~~ PRODUCTOS ~~~~~~~~
             if menuPrincipalDelAdmin == 1:
                 # id del producto a editar
-                idProducto = self.__admin_productos_de_la_tienda()
+                productoId = self.__admin_productos_de_la_tienda()
+                
+                if productoId == 0: # Volver al menu del admin
+                    continue
+
+                # Edita el producto
+                self.__edit_producto_de_la_tienda(productoId)
             
             # ~~~~~~~~ VENTAS ~~~~~~~~
             elif menuPrincipalDelAdmin == 2:
@@ -232,7 +239,7 @@ class AppController:
                 return 0
 
     """ 
-        TIENDA CLIENTE
+        SECCION DEL CLIENTE
     """
     def __menu_principal(self)->int:
         return self.__viewConsola.mostrar_menu('Menu Principal', {
@@ -313,7 +320,7 @@ class AppController:
         compra.save()
     
     """ 
-        TIENDA ADMIN
+        SECCION DEL ADMIN
     """
     def __admin_menu_principal(self) -> int:
         return self.__viewConsola.mostrar_menu('Menu principal de Administrador', {
@@ -341,7 +348,7 @@ class AppController:
                 'categoria': Categoria().find(producto.get_categoria_id()).get_nombre(),
                 'marca': Marca().find(producto.get_marca_id()).get_nombre()
             })
-        self.__viewConsola.admin_mostrar_todos_los_productos(productos)
+        return self.__viewConsola.admin_mostrar_todos_los_productos(productos)
 
     def __admin_registro_de_ventas(self):
         ventasDB = Compra().get_all()
@@ -370,4 +377,48 @@ class AppController:
         else:
             self.__viewConsola.admin_mostrar_todas_las_ventas(ventas, Compra().reporte_de_ventas())
 
+    def __edit_producto_de_la_tienda(self, productoId):
+        # Datos del producto
+        producto = Producto().find(productoId)
+        marcaProducto = Marca().find(producto.get_marca_id())
+        categoriaProducto = Categoria().find(producto.get_categoria_id())
+
+        # Categorias
+        categorias = []
+        for categoria in Categoria().get_all():
+            categorias.append({
+                'id' : categoria.get_id(),
+                'value' : categoria.get_nombre()
+            })
+        # Marcas
+        marcas = []
+        for marca in Marca().get_all():
+            marcas.append({
+                'id' : marca.get_id(),
+                'value' : marca.get_nombre()
+            })
+
+        nuevoProducto = self.__viewConsola.admin_editar_producto(
+            {
+                'nombre': producto.get_nombre(),
+                'precio' : str(producto.get_precio()),
+                'categoria' : categoriaProducto.get_nombre(),
+                'marca' : marcaProducto.get_nombre(),
+                'descripcion' : producto.get_descripcion()
+            },
+            categorias,
+            marcas
+            )
+
+        # Guardar cambios en la DB
+        producto.set_nombre(nuevoProducto['nombre'])
+        producto.set_precio(nuevoProducto['precio'])
+        producto.set_descripcion(nuevoProducto['descripcion'])
+        producto.set_categoria_id(nuevoProducto['categoria_id'])
+        producto.set_marca_id(nuevoProducto['marca_id'])
+        
+        if producto.update():
+            self.__viewConsola.mostrar_mensaje('\n* Los cambios fueron realizados con exito', 2)
+        else:
+            self.__viewConsola.mostrar_mensaje('\n* No se pudo realizar el cambio, vuelva a intentar', 2)
 

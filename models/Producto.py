@@ -61,7 +61,23 @@ class Producto(Model):
         self.__conection.commit()
 
     def update(self):
-        pass
+        try:
+            query = "UPDATE productos \
+                SET nombre = %s, \
+                    precio = %s, \
+                    descripcion = %s, \
+                    categoria_id = %s, \
+                    marca_id = %s \
+                WHERE \
+                    id = %s "
+            value = (self.get_nombre(), self.get_precio(), self.get_descripcion(), self.get_categoria_id(), self.get_marca_id(), self.get_id())
+            # Ejecuto la query
+            self.__conection.cursor().execute(query, value)
+            # Confirmo el insert
+            self.__conection.commit()
+            return True
+        except:
+            return False
 
     def delete(self):
         query = 'DELETE FROM productos WHERE id=%s'

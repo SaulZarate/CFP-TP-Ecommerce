@@ -7,7 +7,10 @@ class Marca(Model):
         self.__id = ''
         self.__nombre = ''
         self.__conection = Conection().get_conection()
-
+    
+    def __str__(self) -> str:
+        return f"id({self.get_id()}) - nombre({self.get_nombre()})"
+    
     def find(self, id):
         sql = f'SELECT \
                     * \
@@ -25,6 +28,18 @@ class Marca(Model):
             marca.set_id(result[0])
             marca.set_nombre(result[1])
             return marca
+
+    def get_all(self):
+        mycursor = self.__conection.cursor()
+        mycursor.execute('SELECT id, nombre FROM marcas')
+        result = mycursor.fetchall()
+        marcas = []
+        for row in result:
+            marca = Marca()
+            marca.set_id(row[0])
+            marca.set_nombre(row[1])
+            marcas.append(marca)
+        return [] if len(marcas) == 0 else marcas
 
     def save(self):
         query = "insert into marcas(id, nombre) values (%s,%s)"

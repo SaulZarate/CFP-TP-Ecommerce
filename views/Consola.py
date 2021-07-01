@@ -14,6 +14,8 @@ class Consola:
 
     def mostrar_mensaje(self, message, timer = 0):
         print(message)
+        if timer != 0:
+            self.limpiar_consola(timer)
 
     def mostrar_menu(self, titulo, contenido ) -> int:
         while(True): 
@@ -41,7 +43,7 @@ class Consola:
             print('*')
             print('****************************************')
             self.limpiar_consola(1.3)
-    
+
     """ 
         PRODUCTOS
     """
@@ -99,7 +101,7 @@ class Consola:
             print('*\tDescripcion: ' + producto['descripcion'])
             print('*')
             print('**********************************************************************')
-            print('*\tIngrese la cantidad de productos que desee comprar')
+            print('*\tIngrese la cantidad de productos que desee comprar. 0 para salir')
             unidades = input('*\tUnidades: ')
             
             try:
@@ -145,7 +147,7 @@ class Consola:
                     print('*\t' + producto['id'] + '\t$' + producto['precio'] + '\t\t' + producto['marca'] + '\t\t' + producto['categoria'] + '\t\t' + producto['nombre'] )
             print('*')
             print('**********************************************************************')
-            print('*\tPara editar un producto ingrese su codigo')
+            print('*\tPara editar un producto ingrese su ID')
             print('*\tPara salir ingrese 0')
             opcion = input('*\tCodigo: ')
             print('*')
@@ -156,10 +158,78 @@ class Consola:
                     return opcionElegida
             except:
                 pass
-            print('*\t¡¡¡ Codigo incorrecto !!!')
+            print('*\t¡¡¡ Codigo o ID incorrecto !!!')
             print('*')
             print('****************************************')
             self.limpiar_consola(1.3)
+
+    def admin_editar_producto(self, producto, categorias, marcas) -> int:
+        """ 
+            producto = {
+                'nombre' : '...',
+                'precio' : '...',
+                'categoria' : '...',
+                'marca' : '...'
+                'descripcion' : '...',
+            },
+            categorias = [
+                {
+                    'id': ...,
+                    'nombre' : '...'
+                },
+                ...
+            ],
+            marcas = [
+                {
+                    'id': ...,
+                    'nombre' : '...'
+                },
+                ...
+            ]
+        """
+        self.limpiar_consola()
+        print('*************************************************************')
+        print('*')
+        print('*\t' + producto['nombre'].upper())
+        print('*')
+        print('*\tPrecio: $' + producto['precio'])
+        print('*\tCategoria: ' + producto['categoria'])
+        print('*\tMarca: ' + producto['marca'])
+        print('*\tDescripcion: ' + producto['descripcion'])
+        print('*')
+        print('*************************************************************')
+        print('\nIngrese los nuevos valores: \n')
+
+        nombre = input('Nombre: ')
+        descripcion = input('Descripcion: ')
+        while True:
+            try:
+                precio = input('Precio: ')
+                precio = float(precio)
+
+                categoria_id = self.select_formulario({
+                    'values' : categorias,
+                    'text' : 'Seleccione el Id de la nueva categoria',
+                    'name' : 'categoria_id',
+                    'title' : 'CATEGORIAS'
+                }, False)
+                marca_id = self.select_formulario({
+                    'values' : marcas,
+                    'text' : 'Seleccione el Id de la nueva categoria',
+                    'name' : 'marca_id',
+                    'title' : 'MARCAS'
+                }, False)
+                
+                return {
+                    'nombre' : nombre,
+                    'precio' : precio,
+                    'descripcion' : descripcion,
+                    'categoria_id' : categoria_id['categoria_id'],
+                    'marca_id' : marca_id['marca_id']
+                }
+            except:
+                mensaje = '*\t¡¡¡ El precio debe ser un numero !!!'
+            print(mensaje)
 
     """         
         COMPRAS
@@ -247,7 +317,7 @@ class Consola:
         print('*************************************************************************************************************************')
         input('Ingrese cualquier letra para salir')
         self.limpiar_consola()
-    
+
     """ 
         FORMULARIOS
     """
@@ -290,7 +360,7 @@ class Consola:
             else:
                 return resultados
     
-    def select_formulario(self, datosSolicitado) -> dict:
+    def select_formulario(self, datosSolicitado, limpiarConsola = True) -> dict:
         """ 
         {
             'values' : [
@@ -304,12 +374,14 @@ class Consola:
                 }
                 ],
             'text' : 'titulo del select' ,
-            'name' : 'key del selecet que devuelve'
+            'name' : 'key del select que devuelve',
+            'title' : '...'
         }
         """
         opcionesValidas = list( map(lambda option: option['id'], datosSolicitado['values']) )
 
-        print('CIUDADES:')
+        if datosSolicitado["title"] != '':
+            print(f'{datosSolicitado["title"]}: ')
         for option in datosSolicitado['values']:
             print('Codigo: ' + str(option['id']) + '\tNombre: ' + option['value'] )
         inputUser = input(datosSolicitado['text'] + ': ')
@@ -318,7 +390,8 @@ class Consola:
             try:
                 value = int(inputUser.strip())
                 if value in opcionesValidas:
-                    self.limpiar_consola()
+                    if limpiarConsola:
+                        self.limpiar_consola()
                     return { datosSolicitado['name'] : value}
             except: 
                 pass
