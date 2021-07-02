@@ -172,14 +172,13 @@ class AppController:
 
             # ~~~~~~~~ PRODUCTOS ~~~~~~~~
             if menuPrincipalDelAdmin == 1:
-                # id del producto a editar
+                # Id del producto
                 productoId = self.__admin_productos_de_la_tienda()
-                
-                if productoId == 0: # Volver al menu del admin
-                    continue
 
-                # Edita el producto
-                self.__edit_producto_de_la_tienda(productoId)
+                # 0 = volver al menuPrincipalDelAdmin
+                if productoId != 0: 
+                    # Edita el producto
+                    self.__edit_producto_de_la_tienda(productoId)
             
             # ~~~~~~~~ VENTAS ~~~~~~~~
             elif menuPrincipalDelAdmin == 2:
@@ -187,11 +186,11 @@ class AppController:
             
             # ~~~~~~~~ CATEGORIAS ~~~~~~~~
             elif menuPrincipalDelAdmin == 3:
-                print('Categorias')
+                self.__admin_mostrar_categorias()
             
             # ~~~~~~~~ MARCAS ~~~~~~~~
             elif menuPrincipalDelAdmin == 4:
-                print('Marcas')
+                self.__admin_mostrar_marcas()
             
             # ~~~~~~~~ USUARIOS ~~~~~~~~
             elif menuPrincipalDelAdmin == 5:
@@ -422,3 +421,26 @@ class AppController:
         else:
             self.__viewConsola.mostrar_mensaje('\n* No se pudo realizar el cambio, vuelva a intentar', 2)
 
+    def __admin_mostrar_categorias(self):
+        categorias = []
+        for categoria in Categoria().get_all():
+            categorias.append(
+                {
+                    'id' : categoria.get_id(),
+                    'nombre' : categoria.get_nombre()
+                }
+            )
+        # Mostrar categorias
+        self.__viewConsola.admin_mostrar_todas_las_categorias(categorias)
+
+    def __admin_mostrar_marcas(self):
+        marcas = []
+        for marca in Marca().get_all():
+            marcas.append(
+                {
+                    'id' : marca.get_id(),
+                    'nombre' : marca.get_nombre()
+                }
+            )
+        # Mostrar marcas
+        self.__viewConsola.admin_mostrar_todas_las_marcas(marcas)

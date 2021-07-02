@@ -54,7 +54,7 @@ class Consola:
             opcionesValidas.append(i['id'])
 
         while(True):
-            print('**********************************************************************')
+            print('******************************************************************************************')
             print('*')
             print('*\tPRODUCTOS DE LA TIENDA')
             print('*')
@@ -62,7 +62,7 @@ class Consola:
             for producto in productos:
                 print('*\t  ' + str(producto['id']) + '\t\t$' + producto['precio'] + '\t\t' + producto['nombre'])
             print('*')
-            print('**********************************************************************')
+            print('******************************************************************************************')
             print('*\tPara ver un producto ingrese su codigo')
             print('*\tPara volver al menu de la tienda ingrese 0')
             opcion = input('*\tCodigo: ')
@@ -316,6 +316,60 @@ class Consola:
         print('*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*')
         print('*************************************************************************************************************************')
         input('Ingrese cualquier letra para salir')
+        self.limpiar_consola()
+
+    """ 
+        MARCAS
+    """
+    def admin_mostrar_todas_las_marcas(self, marcas) -> None:
+        """ 
+            [
+                {
+                    'id' : 0,
+                    'nombre' : '...'
+                },
+                ...
+                ...
+            ]
+        """
+        self.limpiar_consola()
+        print('***********************************************')
+        print('*')
+        print('*\tMARCAS')
+        print('*')
+        print('*\tID\tNOMBRE')
+        for marca in marcas:
+            print(f'*\t{marca["id"]}\t{marca["nombre"]}')
+        print('*')
+        print('***********************************************')
+        input('*\tIngrese cualquier caracter para salir: ')
+        self.limpiar_consola()
+
+    """ 
+        CATEGORIAS
+    """
+    def admin_mostrar_todas_las_categorias(self, categorias) -> None:
+        """ 
+            [
+                {
+                    'id' : 0,
+                    'nombre' : '...'
+                },
+                ...
+                ...
+            ]
+        """
+        self.limpiar_consola()
+        print('***********************************************')
+        print('*')
+        print('*\tCATEGORIAS')
+        print('*')
+        print('*\tID\tNOMBRE')
+        for categoria in categorias:
+            print(f'*\t{categoria["id"]}\t{categoria["nombre"]}')
+        print('*')
+        print('***********************************************')
+        input('*\tIngrese cualquier caracter para salir: ')
         self.limpiar_consola()
 
     """ 
