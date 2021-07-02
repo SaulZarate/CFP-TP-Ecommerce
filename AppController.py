@@ -59,10 +59,11 @@ class AppController:
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             # ~~~~~~~~ CERRAR APP ~~~~~~~~
             # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            else: 
+            else:
                 break
         
         # CERRAR APP
+        self.__viewConsola.mostrar_mensaje_de_despedida()
     
     """ 
         INICIO DE SESION & REGISTRO 
@@ -133,10 +134,7 @@ class AppController:
     def __iniciar_sesion(self) -> Usuario:
         usuario = Usuario()
         while True:
-            self.__viewConsola.limpiar_consola()
-            self.__viewConsola.mostrar_mensaje('***************************')
-            self.__viewConsola.mostrar_mensaje('**** INICIAR DE SESION ****')
-            self.__viewConsola.mostrar_mensaje('***************************\n')
+            self.__viewConsola.mostrar_titulo_inicio_de_sesion()
             inputsUsuario = self.__viewConsola.inputs_formulario([
                 { 'text' : 'Ingrese su email', 'type' : 'email', 'name' : 'email' },
                 { 'text' : 'Ingrese su contraseña', 'type' : 'str', 'name' : 'clave' }
@@ -279,10 +277,7 @@ class AppController:
         compras = comprasUsuario.get_all_for_usuario_id()
 
         if len(compras) == 0:
-            self.__viewConsola.mostrar_mensaje('*************************************')
-            self.__viewConsola.mostrar_mensaje('***** NO REALIZO NINGUNA COMPRA *****')
-            self.__viewConsola.mostrar_mensaje('*************************************')
-            self.__viewConsola.limpiar_consola(2)
+            self.__viewConsola.mostrar_mensaje_de_compras_vacia()
         else:
             comprasFormateadas = []
             for compra in compras:
@@ -464,7 +459,7 @@ class AppController:
     def __admin_eliminar_usuario(self, usuario_id):
         usuario = Usuario().find(usuario_id)
         if  Compra().deleteByUsuarioId(usuario.get_id()) and usuario.delete():
-            self.__viewConsola.mostrar_mensaje('* El usuario a sido eliminado correctamente\n* junto con las compras que realizo previamente.',2)
+            self.__viewConsola.mostrar_mensaje('* El usuario a sido eliminado correctamente\n* junto con las compras que realizo previamente.',3)
             # Eliminar compras del usuario
         else:
-            self.__viewConsola.mostrar_mensaje('* No se pudo eliminar al usuario, vuelva a intentarlo',2)
+            self.__viewConsola.mostrar_mensaje('* No se pudo eliminar al usuario, vuelva a intentarlo',3)

@@ -45,6 +45,23 @@ class Consola:
             print('****************************************')
             self.limpiar_consola(1.3)
 
+    def mostrar_titulo_inicio_de_sesion(self) -> None:
+        self.limpiar_consola()
+        self.mostrar_mensaje('*******************************')
+        self.mostrar_mensaje('*                             *')
+        self.mostrar_mensaje('*      INICIAR DE SESION      *')
+        self.mostrar_mensaje('*                             *')
+        self.mostrar_mensaje('*******************************\n')
+    
+    def mostrar_mensaje_de_despedida(self):
+        self.limpiar_consola()
+        self.mostrar_mensaje('**************************************************')
+        self.mostrar_mensaje('*                                                *')
+        self.mostrar_mensaje('*      GRACIAS POR UTILZAR NUESTRO SERVICIO      *')
+        self.mostrar_mensaje('*                                                *')
+        self.mostrar_mensaje('**************************************************')
+        self.limpiar_consola(3)
+
     """ 
         PRODUCTOS
     """
@@ -275,6 +292,12 @@ class Consola:
         input('* Ingrese cualquier letra para volver al menu de la tienda: ')
         self.limpiar_consola()
 
+    def mostrar_mensaje_de_compras_vacia(self) -> None:
+        self.mostrar_mensaje('*************************************')
+        self.mostrar_mensaje('***** NO REALIZO NINGUNA COMPRA *****')
+        self.mostrar_mensaje('*************************************')
+        self.limpiar_consola(2)
+
     def admin_mostrar_todas_las_ventas(self, ventas, datosDeReporte):
         """ 
             [{
@@ -401,7 +424,10 @@ class Consola:
             print('*')
             print('*\tID\tDNI\t\tNOMBRE\t\tCIUDAD\t\tEMAIL' )
             for usuario in usuarios:
-                mensaje = '*\t' + str(usuario['id']) + '\t' + usuario['dni'] + '\t' + usuario['nombre'] + '\t\t' +usuario['ciudad']
+                mensaje = '*\t' + str(usuario['id']) + '\t' + usuario['dni'] + '\t' 
+                if len(usuario['dni']) < 8:
+                    mensaje += '\t'
+                mensaje += usuario['nombre'] + '\t\t' +usuario['ciudad']
                 if len(usuario['ciudad']) < 8:
                     mensaje += '\t' 
                 mensaje += '\t' + usuario['email']
@@ -503,3 +529,5 @@ class Consola:
             except: 
                 pass
             inputUser = input('* Valor invalido, vuelva a intentar: ')
+
+    
