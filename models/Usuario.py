@@ -15,6 +15,9 @@ class Usuario(Model):
         self.__ciudad_id = 0
         self.__conection = Conection().get_conection()
 
+    def __str__(self) -> str:
+        return f"Id({self.get_id()}) - Nombre: {self.get_nombre()} - DNI: {self.get_dni()} - Email: {self.get_email()} - Ciudad_id: {self.get_ciudad_id()}"
+
     def find(self, id):
         sql = "SELECT * FROM usuarios WHERE id = %s"
         value = (id, )
@@ -58,13 +61,17 @@ class Usuario(Model):
     def update(self):
         pass
 
-    def delete(self):
-        sql = 'DELETE FROM usuarios WHERE id = %s '
-        value = (self.get_id(), )
-        # Ejecuto la query
-        self.__conection.cursor().execute(sql, value)
-        # Confirmo el delete
-        self.__conection.commit()
+    def delete(self) -> bool:
+        try:
+            sql = 'DELETE FROM usuarios WHERE id = %s '
+            value = (self.get_id(), )
+            # Ejecuto la query
+            self.__conection.cursor().execute(sql, value)
+            # Confirmo el delete
+            self.__conection.commit()
+            return True
+        except:
+            return False
 
     # INICIO DE SESION
     def existe_dni(self) -> bool:
@@ -92,16 +99,6 @@ class Usuario(Model):
     def desencriptarPass(self,password):
         return base64.decodebytes(password.encode("UTF-8")).decode('utf-8')
 
-    """ 
-        TO STRING
-    """
-    def __str__(self) -> str:
-        rol = 'Admin' if self.get_isAdmin() else 'Usuario'
-        toString = f'DNI: {self.get_dni()}\n'
-        toString += f'Nombre: {self.get_nombre()}\n'
-        toString += f'Email: {self.get_email()}\n'
-        toString += f'Rol: {rol}'
-        return toString
     
     """ 
         GETTERS Y SETTERS

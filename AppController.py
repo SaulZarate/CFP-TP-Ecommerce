@@ -194,7 +194,10 @@ class AppController:
             
             # ~~~~~~~~ USUARIOS ~~~~~~~~
             elif menuPrincipalDelAdmin == 5:
-                print('Usuarios')
+                usuarioId = self.__admin_mostrar_usuarios()
+
+                if usuarioId != 0:
+                    self.__admin_eliminar_usuario(usuarioId)
             
             # ~~~~~~~~ CERRAR SESION ~~~~~~~~ 
             elif menuPrincipalDelAdmin == 9:
@@ -444,3 +447,23 @@ class AppController:
             )
         # Mostrar marcas
         self.__viewConsola.admin_mostrar_todas_las_marcas(marcas)
+
+    def __admin_mostrar_usuarios(self):
+        usuarios = []
+        for usuario in Usuario().get_all(): 
+            ciudad = Ciudad().find(usuario.get_ciudad_id())
+            usuarios.append({
+                'id' : usuario.get_id(),
+                'dni' : usuario.get_dni(),
+                'nombre' : usuario.get_nombre(),
+                'email' : usuario.get_email(),
+                'ciudad' : ciudad.get_nombre()
+            })
+        return self.__viewConsola.admin_mostrar_todos_los_usuarios(usuarios)
+
+    def __admin_eliminar_usuario(self, usuario_id):
+        usuario = Usuario().find(usuario_id)
+        if usuario.delete():
+            self.__viewConsola.mostrar_mensaje('* El usuario a sido eliminado correctamente',2)
+        else:
+            self.__viewConsola.mostrar_mensaje('* No se pudo eliminar al usuario, vuelva a intentarlo',2)

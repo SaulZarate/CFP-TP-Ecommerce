@@ -23,6 +23,7 @@ class Consola:
             print('****************************************')
             print('*')
             print('*\t' + titulo.upper() )
+            print('*')
             for key, value in contenido.items():
                 if key == '' or value == '':
                     print('*')
@@ -371,6 +372,57 @@ class Consola:
         print('***********************************************')
         input('*\tIngrese cualquier caracter para salir: ')
         self.limpiar_consola()
+
+    """ 
+        USUARIOS
+    """
+    def admin_mostrar_todos_los_usuarios(self, usuarios) -> int:
+        """ 
+            [
+                {
+                    'id' : ... ,
+                    'dni' : '...' ,
+                    'nombre' : '...' ,
+                    'email' : '...' ,
+                    'ciudad' : '...'
+                }
+            ]
+        """
+        opcionesValidas = list(map( lambda u: u['id'], usuarios ))
+        opcionesValidas.append(0)
+
+        self.limpiar_consola()
+        
+        while(True):
+            print('***********************************************************************************')
+            print('*')
+            print('*\tUSUARIOS')
+            print('*')
+            print('*\tID\tDNI\t\tNOMBRE\t\tCIUDAD\t\tEMAIL' )
+            for usuario in usuarios:
+                mensaje = '*\t' + str(usuario['id']) + '\t' + usuario['dni'] + '\t' + usuario['nombre'] + '\t\t' +usuario['ciudad']
+                if len(usuario['ciudad']) < 8:
+                    mensaje += '\t' 
+                mensaje += '\t' + usuario['email']
+                print(mensaje)
+
+            print('*')
+            print('***********************************************************************************')
+            print('*\tPara eliminar un usuario ingrese su ID')
+            print('*\tPara volver atras ingrese 0')
+            opcion = input('*\tOpcion: ')
+            print('*')
+            try:
+                opcionElegida = int(opcion)
+                if opcionElegida in opcionesValidas:
+                    self.limpiar_consola()
+                    return opcionElegida
+            except:
+                pass
+            print('*\t¡¡¡ Opcion invalida !!!')
+            print('*')
+            print('****************************************')
+            self.limpiar_consola(1.5)
 
     """ 
         FORMULARIOS

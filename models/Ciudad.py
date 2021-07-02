@@ -10,7 +10,23 @@ class Ciudad(Model):
         self.__conection = Conection().get_conection()
 
     def find(self, id):
-        pass
+        sql = f'SELECT \
+                    * \
+                FROM \
+                    ciudades \
+                WHERE \
+                    id = {id} '
+        mycursor = self.__conection.cursor()
+        mycursor.execute(sql)
+        result = mycursor.fetchone()
+        if result == None:
+            return None
+        else:
+            marca = Ciudad()
+            marca.set_id(result[0])
+            marca.set_nombre(result[1])
+            marca.set_provincia_id(result[2])
+            return marca
     
     def getAll(self):
         mycursor = self.__conection.cursor()
