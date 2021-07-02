@@ -132,6 +132,7 @@ class Consola:
                 ...
             ]
         """
+        self.limpiar_consola()
         opcionesValidas = list( map(lambda producto: int(producto['id']), productos) )
         opcionesValidas.append(0)
         while True:
@@ -316,7 +317,7 @@ class Consola:
         print('*\tIngresos: $' + datosDeReporte['ingresos'] + '\tUnidades vendidas: ' + datosDeReporte['unidadesVendidas'] + '\t\tUsuarios activos: ' + datosDeReporte['usuariosActivos'] + '\t\tVentas relizadas: '+ datosDeReporte['ventasRealizadas'] + '\t*')
         print('*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*')
         print('*************************************************************************************************************************')
-        input('Ingrese cualquier letra para salir')
+        input('Ingrese cualquier caracter para salir: ')
         self.limpiar_consola()
 
     """ 

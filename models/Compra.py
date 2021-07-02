@@ -69,6 +69,17 @@ class Compra(Model):
         # Confirmo el delete
         self.__conection.commit()
 
+    def deleteByUsuarioId(self, usuarioId):
+        try:
+            sql = 'DELETE FROM compras WHERE usuario_id = %s '
+            value = (usuarioId, )
+            # Ejecuto la query
+            self.__conection.cursor().execute(sql, value)
+            # Confirmo el delete
+            self.__conection.commit()
+            return True
+        except:
+            return False
 
     def reporte_de_ventas(self) -> dict:
         """ 

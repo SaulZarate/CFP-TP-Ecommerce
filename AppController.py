@@ -463,7 +463,8 @@ class AppController:
 
     def __admin_eliminar_usuario(self, usuario_id):
         usuario = Usuario().find(usuario_id)
-        if usuario.delete():
-            self.__viewConsola.mostrar_mensaje('* El usuario a sido eliminado correctamente',2)
+        if  Compra().deleteByUsuarioId(usuario.get_id()) and usuario.delete():
+            self.__viewConsola.mostrar_mensaje('* El usuario a sido eliminado correctamente\n* junto con las compras que realizo previamente.',2)
+            # Eliminar compras del usuario
         else:
             self.__viewConsola.mostrar_mensaje('* No se pudo eliminar al usuario, vuelva a intentarlo',2)
